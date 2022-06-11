@@ -20,8 +20,4 @@ jobs:
       run: docker build -t yahyaqandel/maven-chrome .
     - uses: actions/checkout@v2
     - name: build and run tests
-      run: docker run -e ACCOUNT_PASSWROD=$ACCOUNT_PASSWORD -e ACCOUNT_EMAIL=$ACCOUNT_EMAIL yahyaqandel/maven-chrome
-      env:
-        ACCOUNT_EMAIL: ${{ secrets.ACCOUNT_EMAIL }}
-        ACCOUNT_PASSWORD: ${{ secrets.ACCOUNT_PASSWORD }}
-        JAVA_OPTS: -Dwebdriver.chrome.whitelistedIps=
+      run: docker run -e ACCOUNT_PASSWROD=${{ secrets.ACCOUNT_PASSWORD }} -e ACCOUNT_EMAIL=${{ secrets.ACCOUNT_EMAIL }} yahyaqandel/maven-chrome
