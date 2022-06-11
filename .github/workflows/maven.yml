@@ -1,0 +1,26 @@
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: build docker image
+      run: docker build -t yahyaqandel/maven-chrome .
+    - uses: actions/checkout@v2
+    - name: build and run tests
+      run: docker run yahyaqandel/maven-chrome
+      env:
+        ACCOUNT_EMAIL: ${{ secrets.ACCOUNT_EMAIL }}
+        ACCOUNT_PASSWORD: ${{ secrets.ACCOUNT_PASSWORD }}
+        JAVA_OPTS: -Dwebdriver.chrome.whitelistedIps=

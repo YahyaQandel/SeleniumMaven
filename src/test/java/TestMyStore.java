@@ -1,4 +1,3 @@
-package tests;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,6 +7,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -22,10 +22,10 @@ public class TestMyStore {
     public static final String ACCOUNT_ICON_HEADER = "MY ACCOUNT";
     private static final String MYSTORE_URL = "http://automationpractice.com/index.php?controller=authentication&back=my-account";
     private WebDriver driver;
-    private String accountEmail = "test@automationclass.com";
-    private String accountPassword = "T7Qy5E$Bt!a4P!!";
+    private final String accountEmail = System.getenv("ACCOUNT_EMAIL");
+    private final String accountPassword = System.getenv("ACCOUNT_PASSWORD");
     @Before
-    public void prepare() throws IOException {
+    public void prepare()  {
         WebDriverManager.chromedriver().setup();
         ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.addArguments("--headless");
@@ -33,8 +33,34 @@ public class TestMyStore {
         driver.get(MYSTORE_URL);
     }
     @Test
-    public void testAccountLogin() throws IOException, InterruptedException {
-        // write your tests here
+    public void testAccountLogin()  {
+        loginToAccount();
+        assertUserDetailsExistsInPage();
+        assertMyAccountPageHeaderExists();
+    }
+
+    private void assertMyAccountPageHeaderExists() {
+        WebElement myProfileIconInlineText = waitForElementsToBeVisible(By.className("page-heading")).get(0);
+        String myProfileIconString = myProfileIconInlineText.getText();
+        assertEquals(myProfileIconString,ACCOUNT_ICON_HEADER);
+    }
+
+    private void assertUserDetailsExistsInPage() {
+        WebElement accountNumberTitle = waitForElementToBeVisible(By.className("account"));
+        String AccountHeadingTitle = accountNumberTitle.getText();
+        assertTrue(AccountHeadingTitle.contains("Test User"));
+    }
+
+    private void loginToAccount() {
+        WebElement submitButton = waitForElementToBeVisible(By.id("SubmitLogin"));
+        boolean isSubmitButtonDisplayed = submitButton.isDisplayed();
+        if (isSubmitButtonDisplayed) {
+            WebElement loginNumberField = waitForElementToBeVisible(By.id("email"));
+            loginNumberField.sendKeys(accountEmail);
+            WebElement loginPasswordField = waitForElementToBeVisible(By.id("passwd"));
+            loginPasswordField.sendKeys(accountPassword);
+            loginPasswordField.sendKeys(Keys.RETURN);
+        }
     }
 
 
@@ -49,7 +75,6 @@ public class TestMyStore {
         return wait.until(
                 ExpectedConditions.visibilityOfAllElementsLocatedBy(selector));
     }
-
 
     @After
     public void teardown() throws IOException {
