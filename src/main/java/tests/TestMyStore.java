@@ -11,7 +11,6 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.config.parser.*;
 import java.io.IOException;
 import java.util.List;
 
@@ -23,7 +22,6 @@ public class TestMyStore {
     public static final String ACCOUNT_ICON_HEADER = "MY ACCOUNT";
     private static final String MYSTORE_URL = "http://automationpractice.com/index.php?controller=authentication&back=my-account";
     private WebDriver driver;
-    ConfigParser props;
     private String accountEmail = "test@automationclass.com";
     private String accountPassword = "T7Qy5E$Bt!a4P!!";
     @Before
